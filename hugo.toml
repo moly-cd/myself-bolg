@@ -1,0 +1,12 @@
+baseURL = "https://momoxjk.xyz/"
+defaultContentLanguage = "zh-cn"
+relativeURLs = true
+title = "云烟小站"
+
+[languages.zh-cn]
+  label = "简体中文"
+  locale = "zh-CN"
+
+[params]
+  author = "Nuno"
+  description = "一个初创待有优化的hugo静态网站(后续会慢慢增加更多功能)"

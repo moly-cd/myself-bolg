@@ -1,0 +1,114 @@
+{{ define "main" }}
+<section class="home-hero" aria-label="首页轮播图">
+  <div class="hero-carousel" data-carousel>
+    <div class="hero-track" data-carousel-track>
+      <article class="hero-slide">
+        <video muted loop playsinline preload="none" aria-label="首页轮播图 1" data-carousel-video>
+          <source data-src="./images/carousel/slide-1.mp4" type="video/mp4">
+        </video>
+      </article>
+
+      <article class="hero-slide">
+        <video muted loop playsinline preload="none" aria-label="首页轮播图 2" data-carousel-video>
+          <source data-src="./images/carousel/slide-2.mp4" type="video/mp4">
+        </video>
+      </article>
+
+      <article class="hero-slide">
+        <video muted loop playsinline preload="none" aria-label="首页轮播图 3" data-carousel-video>
+          <source data-src="./images/carousel/slide-3.mp4" type="video/mp4">
+        </video>
+      </article>
+
+      <article class="hero-slide">
+        <video muted loop playsinline preload="none" aria-label="首页轮播图 4" data-carousel-video>
+          <source data-src="./images/carousel/slide-4.mp4" type="video/mp4">
+        </video>
+      </article>
+
+      <article class="hero-slide">
+        <video muted loop playsinline preload="none" aria-label="首页轮播图 5" data-carousel-video>
+          <source data-src="./images/carousel/slide-5.mp4" type="video/mp4">
+        </video>
+      </article>
+    </div>
+
+    <div class="hero-quote" aria-label="首页名言">
+      <!-- 改动首页文字显示data-text里的内容要与<p></p>里的一致 -->
+      <p class="hero-quote-main" data-text="允许自己的不完美，恰是完美的开始">允许自己的不完美，恰是完美的开始</p>
+      <p class="hero-quote-sub">Allowing your imperfections is the beginning of perfection.</p>
+    </div>
+
+    <button class="hero-control prev" type="button" data-carousel-prev aria-label="上一张">
+      &#10094;
+    </button>
+    <button class="hero-control next" type="button" data-carousel-next aria-label="下一张">
+      &#10095;
+    </button>
+
+    <div class="hero-indicators" data-carousel-indicators aria-label="轮播分页"></div>
+  </div>
+</section>
+
+<section class="home-posts-intro" aria-labelledby="home-posts-title">
+  <h2 id="home-posts-title">最新文章</h2>
+  <p>保留你现在的文章列表内容，向下滑动后从这里开始继续浏览。</p>
+</section>
+
+{{ $posts := where site.RegularPages "Section" "posts" }}
+{{ $paginator := .Paginate $posts 10 }}
+
+<section class="home-posts" aria-label="最新文章列表" data-post-list-page>
+  {{ if $paginator.Pages }}
+  <div class="hover-post-grid" role="list">
+    {{ range $page := $paginator.Pages }}
+    {{ $image := or $page.Params.image $page.Params.cover $page.Params.featured_image }}
+    {{ $imageSrc := relURL "images/avatar-placeholder.svg" }}
+    {{ with $image }}
+    {{ $imageSrc = . }}
+    {{ if not (or (hasPrefix . "http://") (hasPrefix . "https://") (hasPrefix . "/")) }}
+    {{ $imageSrc = relURL . }}
+    {{ end }}
+    {{ end }}
+
+    <article class="hover-post-card effect-six" role="listitem">
+      <a class="hover-post-link" href="{{ $page.RelPermalink }}" aria-label="{{ $page.Title }}">
+        <img src="{{ $imageSrc }}" alt="" loading="lazy">
+        <div class="hover-post-overlay">
+          <div class="hover-post-content">
+            <p class="hover-post-date">{{ $page.Date.Format "2006-01-02" }}</p>
+            <h3>{{ $page.Title }}</h3>
+            <p class="hover-post-summary">{{ $page.Summary | plainify | truncate 120 }}</p>
+          </div>
+        </div>
+      </a>
+    </article>
+    {{ end }}
+  </div>
+
+  {{ if gt $paginator.TotalPages 1 }}
+  <nav class="post-pagination" aria-label="首页文章分页">
+    {{ with $paginator.Prev }}
+    <a class="pagination-link pagination-prev" href="{{ .URL }}">上一页</a>
+    {{ end }}
+
+    <div class="pagination-pages">
+      {{ range $paginator.Pagers }}
+      {{ if eq . $paginator }}
+      <span class="pagination-link is-current" aria-current="page">{{ .PageNumber }}</span>
+      {{ else }}
+      <a class="pagination-link" href="{{ .URL }}">{{ .PageNumber }}</a>
+      {{ end }}
+      {{ end }}
+    </div>
+
+    {{ with $paginator.Next }}
+    <a class="pagination-link pagination-next" href="{{ .URL }}">下一页</a>
+    {{ end }}
+  </nav>
+  {{ end }}
+  {{ else }}
+  <p class="post-list-empty">暂无文章。</p>
+  {{ end }}
+</section>
+{{ end }}

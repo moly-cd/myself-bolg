@@ -1,0 +1,13 @@
+{{ define "main" }}
+<article>
+  <h2>{{ .Title }}</h2>
+  <p>发布时间：{{ .Date.Format "2006-01-02 15:04" }}</p>
+
+  {{ with .Date }}
+  <p>日期格式化展示：{{ .Format "2006/01/02" }}</p>
+  {{ end }}
+
+  <hr>
+  {{ .Content }}
+</article>
+{{ end }}

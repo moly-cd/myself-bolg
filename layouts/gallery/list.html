@@ -1,0 +1,30 @@
+{{ define "main" }}
+<section class="album-page" aria-labelledby="album-title">
+  <div class="album-intro">
+    <p class="album-kicker">Photo Album</p>
+    <h2 id="album-title">{{ .Title }}</h2>
+    {{ with .Description }}
+    <p>{{ . }}</p>
+    {{ end }}
+  </div>
+
+  {{ with .Params.photos }}
+  <div class="album-grid" role="list">
+    {{ range . }}
+    {{ $imageSrc := .src }}
+    {{ if not (or (hasPrefix .src "http://") (hasPrefix .src "https://") (hasPrefix .src "/")) }}
+      {{ $imageSrc = relURL .src }}
+    {{ end }}
+    <figure class="album-card" role="listitem">
+      <img src="{{ $imageSrc }}" alt="{{ .alt | default .caption }}" loading="lazy">
+      {{ with .caption }}
+      <figcaption>{{ . }}</figcaption>
+      {{ end }}
+    </figure>
+    {{ end }}
+  </div>
+  {{ else }}
+  <p class="post-list-empty">暂无照片。</p>
+  {{ end }}
+</section>
+{{ end }}

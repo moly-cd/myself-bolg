@@ -1,0 +1,10 @@
+/* 以后你只需要改这个文件，不要再改 baseof.html 里的亮度参数。 */
+/* 数值越小，遮罩越淡；brightness 越大，视频越亮。 */
+
+:root {
+  --hero-overlay-dark-top: 0.06;
+  --hero-overlay-dark-bottom: 0.24;
+  --hero-overlay-tint-left: 0.08;
+  --hero-overlay-tint-right: 0.04;
+  --hero-media-brightness: 1;
+}

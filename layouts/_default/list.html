@@ -1,0 +1,64 @@
+{{ define "main" }}
+{{ $paginator := .Paginate .Pages 10 }}
+
+<section class="post-list-page" aria-labelledby="post-list-title" data-post-list-page>
+  <div class="post-list-intro">
+    <h2 id="post-list-title">{{ .Title }}</h2>
+    {{ .Content }}
+  </div>
+
+  {{ if $paginator.Pages }}
+  <div class="hover-post-grid" role="list">
+    {{ range $page := $paginator.Pages }}
+    {{ $image := or $page.Params.image $page.Params.cover $page.Params.featured_image }}
+    {{ $imageSrc := relURL "images/avatar-placeholder.svg" }}
+    {{ with $image }}
+      {{ $imageSrc = . }}
+      {{ if not (or (hasPrefix . "http://") (hasPrefix . "https://") (hasPrefix . "/")) }}
+        {{ $imageSrc = relURL . }}
+      {{ end }}
+    {{ end }}
+
+    <article class="hover-post-card effect-six" role="listitem">
+      <a class="hover-post-link" href="{{ $page.RelPermalink }}" aria-label="{{ $page.Title }}">
+        <img src="{{ $imageSrc }}" alt="" loading="lazy">
+        <div class="hover-post-overlay">
+          <div class="hover-post-content">
+            <p class="hover-post-date">
+              {{ with $page.Date }}{{ .Format "2006-01-02" }}{{ end }}
+            </p>
+            <h3>{{ $page.Title }}</h3>
+            <p class="hover-post-summary">{{ $page.Summary | plainify | truncate 120 }}</p>
+          </div>
+        </div>
+      </a>
+    </article>
+    {{ end }}
+  </div>
+  {{ else }}
+  <p class="post-list-empty">暂无文章。</p>
+  {{ end }}
+
+  {{ if gt $paginator.TotalPages 1 }}
+  <nav class="post-pagination" aria-label="文章分页">
+    {{ with $paginator.Prev }}
+    <a class="pagination-link pagination-prev" href="{{ .URL }}">上一页</a>
+    {{ end }}
+
+    <div class="pagination-pages">
+      {{ range $paginator.Pagers }}
+      {{ if eq . $paginator }}
+      <span class="pagination-link is-current" aria-current="page">{{ .PageNumber }}</span>
+      {{ else }}
+      <a class="pagination-link" href="{{ .URL }}">{{ .PageNumber }}</a>
+      {{ end }}
+      {{ end }}
+    </div>
+
+    {{ with $paginator.Next }}
+    <a class="pagination-link pagination-next" href="{{ .URL }}">下一页</a>
+    {{ end }}
+  </nav>
+  {{ end }}
+</section>
+{{ end }}
